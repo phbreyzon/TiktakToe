@@ -1,16 +1,16 @@
 package tiktakto;
 
 public class User {
-    private String Symbol = new String(); 
-    private int turn = 0;
+    private char Symbol; 
+    private int turn;
 
 
-    public User(String symbol, int turn) {
+    public User(char symbol, int turn) {
         this.Symbol = symbol;
         this.turn = turn;
     }
     
-    public String getSymbol() {
+    public char getSymbol() {
         return Symbol;
     }
 
