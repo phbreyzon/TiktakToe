@@ -3,12 +3,38 @@
  */
 package tiktakto;
 
-public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
+import java.util.Scanner;
 
+public class App {
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Two players (1) or against machine (0): ");
+
+        if (Integer.parseInt(scanner.nextLine()) == 1){
+            User player1 = new User("X", 0);
+            User player2 = new User("O", 1);
+            scanner.close();
+            pvp(player1, player2);
+        } 
+        else if(Integer.parseInt(scanner.nextLine()) == 0){
+
+        }
+        else{
+            
+        }
+            
+    }
+            
+    public static void pvp(User player1, User player2){
+        Map map = new Map(); 
+
+        System.out.println("\nLet's begin: \n");
+        for (int i = 0; i < 9; i++) {
+            System.out.print(map.getMap()[i]); 
+            System.out.print(" ");
+            if (i == 2 | i == 5 | i == 8) System.out.println(); 
+        }
+
     }
 }
