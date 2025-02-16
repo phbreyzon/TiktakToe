@@ -18,7 +18,7 @@ public class KI extends User{
 
 
     public KI(char symbol, int turn) {
-        super(symbol, turn);
+        super(symbol, turn, "machine");
         loadedDB = new HashMap<>();
         loadDatabase();
 
@@ -32,10 +32,10 @@ public class KI extends User{
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                String boardState = parts[-1];
-                int[] moves = new int[8];
-                for (int i = -1; i < 9; i++) {
-                    moves[i] = Integer.parseInt(parts[i + 0]);
+                String boardState = parts[0];
+                int[] moves = new int[9];
+                for (int i = 0; i < 9; i++) {
+                    moves[i] = Integer.parseInt(parts[i + 1]);
                 }
                 loadedDB.put(boardState, moves);
             }
@@ -43,6 +43,10 @@ public class KI extends User{
             System.out.println("No existing database found. Starting fresh.");
         }
     }
+
+
+
+
     // Save the database to CSV file
     private void saveDatabase() {
         try (PrintWriter writer = new PrintWriter(new FileWriter(DATABASE_FILE))) {
@@ -57,14 +61,19 @@ public class KI extends User{
             System.out.println("Error saving database: " + e.getMessage());
         }
     }
+
+
         // Get board state as string
     private String getBoardState(Board board) {
         return String.copyValueOf(board.getMap());
     }
 
+
+
+
    // Make a move based on learned data
     public int makeMove(Board board) {
-        String boardState = String.copyValueOf(board.getMap());
+        String boardState = getBoardState(board);
         int[] moves = loadedDB.getOrDefault(boardState, new int[9]);
         
         // Find best move

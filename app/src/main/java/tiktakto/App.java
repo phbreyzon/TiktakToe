@@ -3,7 +3,9 @@
  */
 package tiktakto;
 
-import java.util.Scanner;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public class App {
 
@@ -11,11 +13,14 @@ public class App {
         int decision = Input.inputInt("Choose between a pvp (1) or mvp (0):");
 
         if ( decision == 1){
-            User player1 = new User('X', 0);
-            User player2 = new User('O', 1);
-            pvp(player1, player2);
+            User player1 = new User('X', 0, "player1");
+            User player2 = new User('O', 1, "player2");
+            game(player1, player2);
         } 
         else if(decision == 0){
+            KI machine = new KI('X', 1);
+            User player = new User('O', 0, "human player");
+            game(machine, player);
 
         }
         else{
@@ -24,31 +29,97 @@ public class App {
             
     }
             
-    public static void pvp(User player1, User player2){
+    public static void game(User player1, User player2){
+
+        List<String> boardStates = new ArrayList<>();
+        List<Integer> moves = new ArrayList<>();
+
         Board map = new Board();
         System.out.println("\nLet's begin: \n");
-        boolean won = false;
+        boolean gameStop = false;
 
-        while(!won){
-            if(player1.getTurn() == 1){
-                printBoard(map);
-                map.setMap(Input.inputInt("Player 1 makes a move (0-8): "), player1.getSymbol());
-                player1.setTurn(0);
-                player2.setTurn(1);
+        while(!gameStop){
+            if(player1.getName().equals("machine")){
+                // AI making a move
+                int machinemove = machineMoves(((KI) player1), player2, map);
+                // data for the AI
+                moves.add(machinemove);
+                boardStates.add(getBoardState(map));
+                //updating state of map
+                map.setMap(machinemove, player1.getSymbol());
+
+                //check if machine wins
+                if (checkWin(map, player1.getSymbol())) {
+                    printBoard(map);
+                    System.out.println("Machine wins!!");
+                    break;
+                    
+                }
+ 
+                
             }
-            else if(player2.getTurn() == 1){
-                printBoard(map);
-                map.setMap(Input.inputInt("Player 2 makes a move (0-8):"), player2.getSymbol());
-                player2.setTurn(0);
-                player1.setTurn(1);
+            else if(player1.getTurn() == 1 && player1.getName().equals("player1")){
+                //Player1 making a move
+                int playerMove = playerMakesMove(player1, player2, map);
+                // data for the AI
+                moves.add(playerMove);
+                boardStates.add(getBoardState(map));
+                // updating state of map
+                map.setMap(playerMove, player1.getSymbol());
+                // check if player1 wins
+
+                if (checkWin(map, player1.getSymbol())) {
+                    printBoard(map);
+                    System.out.println("Player 1 wins!!");
+                    break;
+                    
+                }
             }
-            printBoard(map);
-            if(Input.inputInt("Continue(0), end (1): ") == 1){
-                won = true;
+            if(player2.getTurn() == 1){
+                // player2 makes a move and updates map state 
+                map.setMap(playerMakesMove(player2, player1, map), player2.getSymbol());
+                // checks if player2 wins
+                if(checkWin(map, player2.getSymbol())){
+                    printBoard(map);
+                    System.out.println("Player 2 wins!!");
+                    break;
+                }
             }
+            //checks for a draw
+            gameStop = getBoardState(map).matches("^[XO]{9}$");
+        }
+
+        if(gameStop) System.out.println("It's a draw");
+
+        int finaldecision = Input.inputInt("Would you like the AI to learn from this match (as player1): (1 =yes) (0 = no):") ;
+        if(finaldecision== 1 && player1.getName().equals("player1")){
+            KI machine = new KI(player1.getSymbol(), 0);
+            machine.learnFromGame(boardStates, moves, checkWin(map, player1.getSymbol()));
+        }
+        else if(finaldecision == 1 && player1.getName().equals("machine")){
+            ((KI) player1).learnFromGame(boardStates, moves, checkWin(map, player1.getSymbol()));
         }
 
     }
+
+
+    public static int playerMakesMove(User firstPlayer, User secondPlayer, Board map) {
+        printBoard(map);
+        secondPlayer.setTurn(1);
+        firstPlayer.setTurn(0);
+        return Input.inputInt(String.format("%s makes a move (0-8)", firstPlayer.getName() ));
+        
+    }
+
+    public static int machineMoves(KI firstPlayer, User secondPlayer, Board map) {
+        int move = firstPlayer.makeMove(map);
+        secondPlayer.setTurn(1);
+        firstPlayer.setTurn(0);
+        return move;
+        
+    }
+
+
 
     public static void printBoard(Board board){
         for (int i = 0; i < 9; i++) {
@@ -56,6 +127,25 @@ public class App {
             System.out.print(" ");
             if (i == 2 | i == 5 | i == 8) System.out.println(); 
         }
+        System.out.println("");
 
+    }
+
+
+    public static boolean checkWin(Board board, char symbol) {
+        String boardString = getBoardState(board);
+        boolean horizontalWin = boardString.matches(String.format(".*(%c%c%c).*",symbol,symbol,symbol));
+        boolean diagonalWin = boardString.matches(String.format(".*(%c...%c...%c).*",symbol,symbol,symbol));
+        boolean diagonalrWin = boardString.matches(String.format(".*(%c.%c.%c).*",symbol,symbol,symbol));
+        boolean verticalWin = boardString.matches(String.format(".*(%c..%c..%c).*",symbol,symbol,symbol));
+        if (horizontalWin | diagonalWin | verticalWin | diagonalrWin) return true;
+        else return false;
+    }
+        
+
+
+
+    private static String getBoardState(Board board) {
+        return String.copyValueOf(board.getMap());
     }
 }
