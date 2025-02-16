@@ -27,6 +27,18 @@ public class Input {
             }
         }
     }
+     public static int validMove(String prompt, Board board) {
+        while (true) {
+            try {
+                System.out.print(prompt);
+                int position = Integer.parseInt(scanner.nextLine());
+                if(board.getMap()[position] == '-') return position;
+                else System.out.println("Invalid move, again: ");
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid integer.");
+            }
+        }
+    }
     
     // Double input
     public static double inputDouble(String prompt) {

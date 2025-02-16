@@ -13,18 +13,22 @@ import java.util.Random;
 
 public class KI extends User{
 
-    private Map<String, int[]> loadedDB;
-    private static final String DATABASE_FILE = "database.csv";
+    private Map<String, double[]> loadedDB;
+    private String DATABASE_FILE = "database_X.csv";
+    private static final double BIAS = 0.5; // Bias value
+    private static final double MIN_THRESHOLD = 0.0;
+    private static final double MAX_THRESHOLD = 1.0;
 
 
     public KI(char symbol, int turn) {
         super(symbol, turn, "machine");
         loadedDB = new HashMap<>();
+        if(symbol =='O') DATABASE_FILE = "database_O.csv";
         loadDatabase();
 
 
 
-    }
+    } 
 
     // Load the database from CSV file
     private void loadDatabase() {
@@ -33,9 +37,9 @@ public class KI extends User{
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 String boardState = parts[0];
-                int[] moves = new int[9];
+                double[] moves = new double[9];
                 for (int i = 0; i < 9; i++) {
-                    moves[i] = Integer.parseInt(parts[i + 1]);
+                    moves[i] = Double.parseDouble(parts[i + 1]);
                 }
                 loadedDB.put(boardState, moves);
             }
@@ -50,9 +54,9 @@ public class KI extends User{
     // Save the database to CSV file
     private void saveDatabase() {
         try (PrintWriter writer = new PrintWriter(new FileWriter(DATABASE_FILE))) {
-            for (Map.Entry<String, int[]> entry : loadedDB.entrySet()) {
+            for (Map.Entry<String, double[]> entry : loadedDB.entrySet()) {
                 StringBuilder line = new StringBuilder(entry.getKey());
-                for (int value : entry.getValue()) {
+                for (double value : entry.getValue()) {
                     line.append(",").append(value);
                 }
                 writer.println(line);
@@ -74,12 +78,12 @@ public class KI extends User{
    // Make a move based on learned data
     public int makeMove(Board board) {
         String boardState = getBoardState(board);
-        int[] moves = loadedDB.getOrDefault(boardState, new int[9]);
+        double[] moves = loadedDB.getOrDefault(boardState, new double[9]);
         
         // Find best move
         int bestMove = -1;
-        int maxValue = -1;
-        
+        double maxValue = -1;
+       
         for (int i = 0; i < 9; i++) {
             if (board.getMap()[i] == '-' && moves[i] > maxValue) {
                 maxValue = moves[i];
@@ -114,13 +118,46 @@ public class KI extends User{
             String state = gameStates.get(i);
             int move = moves.get(i);
             
-            int[] stateValues = loadedDB.getOrDefault(state, new int[9]);
+            double[] stateValues = loadedDB.getOrDefault(state, new double[9]);
             stateValues[move] += reward;
+            stateValues = normalizeWeights(stateValues);
             loadedDB.put(state, stateValues);
         }
         
         saveDatabase();
     }
+
+    private double[] normalizeWeights(double[] weights) {
+        double[] normalizedWeights = new double[weights.length];
+        
+        // Find min and max values
+        double min = Integer.MAX_VALUE;
+        double max = Integer.MIN_VALUE;
+        for (double weight : weights) {
+            if (weight < min) min = weight;
+            if (weight > max) max = weight;
+        }
+
+        // Apply Min-Max normalization with bias
+        for (int i = 0; i < weights.length; i++) {
+            if (max == min) {
+                // Handle the case where all values are the same
+                normalizedWeights[i] = 0.5 + BIAS; // Default to middle value
+            } else {
+                normalizedWeights[i] = roundTo6Decimals(((double)(weights[i] - min) / (max - min)) + BIAS);
+                
+                // Ensure values stay within bounds
+                normalizedWeights[i] = Math.max(MIN_THRESHOLD, Math.min(MAX_THRESHOLD, normalizedWeights[i]));
+            }
+        }
+
+        return normalizedWeights;
+    }
+    // Helper method to round to 6 decimal places
+    private double roundTo6Decimals(double value) {
+        return Math.round(value * 1000000.0) / 1000000.0;
+    }
+
 
 
 

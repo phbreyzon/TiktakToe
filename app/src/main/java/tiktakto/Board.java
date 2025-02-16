@@ -1,13 +1,13 @@
 package tiktakto;
 
 public class Board {
-    private char[] mapString = {'-','-','-','-','-','-','-','-','-'};
+    private char[] map = {'-','-','-','-','-','-','-','-','-'};
     
     public void setMap( int position, char symbol){
-        mapString[position] = symbol;
+        map[position] = symbol;
     }
 
     public char[] getMap(){
-        return mapString;
+        return map;
     }
 }
