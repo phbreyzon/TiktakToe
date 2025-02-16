@@ -106,7 +106,7 @@ public class App {
         printBoard(map);
         secondPlayer.setTurn(1);
         firstPlayer.setTurn(0);
-        return Input.inputInt(String.format("%s makes a move (0-8)", firstPlayer.getName() ));
+        return Input.inputInt(String.format("%s makes a move (0-8): ", firstPlayer.getName() ));
         
     }
 
@@ -133,7 +133,7 @@ public class App {
 
     public static boolean checkWin(Board board, char symbol) {
         String boardString = getBoardState(board);
-        boolean horizontalWin = boardString.matches(String.format(".*(%c%c%c).*",symbol,symbol,symbol));
+        boolean horizontalWin = boardString.matches(String.format("(.{0}|.{3}|.{6})(%c%c%c).*",symbol,symbol,symbol));
         boolean diagonalWin = boardString.matches(String.format(".*(%c...%c...%c).*",symbol,symbol,symbol));
         boolean diagonalrWin = boardString.matches(String.format(".*(%c.%c.%c).*",symbol,symbol,symbol));
         boolean verticalWin = boardString.matches(String.format(".*(%c..%c..%c).*",symbol,symbol,symbol));
