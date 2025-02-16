@@ -15,7 +15,7 @@ public class KI extends User{
 
     private Map<String, double[]> loadedDB;
     private String DATABASE_FILE = "database_X.csv";
-    private static final double BIAS = 0.5; // Bias value
+    private static final double BIAS = 0.0; // Bias value
     private static final double MIN_THRESHOLD = 0.0;
     private static final double MAX_THRESHOLD = 1.0;
 
