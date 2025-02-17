@@ -25,10 +25,9 @@ public class KI extends User{
         loadedDB = new HashMap<>();
         if(symbol =='O') DATABASE_FILE = "database_O.csv";
         loadDatabase();
-
-
-
     } 
+
+
 
     // Load the database from CSV file
     private void loadDatabase() {
@@ -67,7 +66,7 @@ public class KI extends User{
     }
 
 
-        // Get board state as string
+    // Get board state as string
     private String getBoardState(Board board) {
         return String.copyValueOf(board.getMap());
     }
@@ -127,6 +126,9 @@ public class KI extends User{
         saveDatabase();
     }
 
+
+
+    // Normalize weights within MIN and MAX_THRESHOLD
     private double[] normalizeWeights(double[] weights) {
         double[] normalizedWeights = new double[weights.length];
         
@@ -153,15 +155,13 @@ public class KI extends User{
 
         return normalizedWeights;
     }
+
+
+
     // Helper method to round to 6 decimal places
     private double roundTo6Decimals(double value) {
         return Math.round(value * 1000000.0) / 1000000.0;
     }
-
-
-
-
-
 
 
 

@@ -59,6 +59,8 @@ public class App {
             
     }
 
+
+    // Starting game Player vs Machine
     public static void machineGame(KI X, KI O){
  
         List<String> boardStates_O  = new ArrayList<>();
@@ -99,7 +101,10 @@ public class App {
         O.learnFromGame(boardStates_O, moves_O, checkWin(map, 'O'));
 
     }
-            
+
+
+
+    // Starting game Player vs Player            
     public static void game(User player1, User player2){
 
         List<String> boardStates = new ArrayList<>();
@@ -126,8 +131,7 @@ public class App {
                     break;
                     
                 }
- 
-                
+  
             }
             else if(player1.getTurn() == 1 && player1.getName().equals("player1")){
                 //Player1 making a move
@@ -174,14 +178,17 @@ public class App {
     }
 
 
+    // Function that returns the player's Input
     public static int playerMakesMove(User firstPlayer, User secondPlayer, Board map) {
         printBoard(map);
         secondPlayer.setTurn(1);
         firstPlayer.setTurn(0);
-        return Input.validMove(String.format("%s makes a move (0-8): ", firstPlayer.getName()), map);
+        return Input.validMove(String.format("%s (%c) makes a move (0-8): ", firstPlayer.getName(), firstPlayer.getSymbol()), map);
         
     }
 
+
+    // Function that return the Machine's Input
     public static int machineMoves(KI firstPlayer, User secondPlayer, Board map) {
         int move = firstPlayer.makeMove(map);
         secondPlayer.setTurn(1);
@@ -191,7 +198,7 @@ public class App {
     }
 
 
-
+    // Print the Board in the correct format for terminal use
     public static void printBoard(Board board){
         for (int i = 0; i < 9; i++) {
             System.out.print(board.getMap()[i]); 
@@ -203,6 +210,7 @@ public class App {
     }
 
 
+    // Check for winning states
     public static boolean checkWin(Board board, char symbol) {
         String boardString = getBoardState(board);
         boolean horizontalWin = boardString.matches(String.format("(.{0}|.{3}|.{6})(%c%c%c).*",symbol,symbol,symbol));
@@ -215,7 +223,7 @@ public class App {
         
 
 
-
+    // Return the board state as a String
     private static String getBoardState(Board board) {
         return String.copyValueOf(board.getMap());
     }
