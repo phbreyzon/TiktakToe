@@ -54,9 +54,7 @@ public class App {
                 machineGame(machine1, machine2);
                 System.out.println("Cycle number: " + i);              
             }
-            
         }
-            
     }
 
 
@@ -99,7 +97,6 @@ public class App {
         }
         X.learnFromGame(boardStates_X, moves_X, checkWin(map, 'X'));
         O.learnFromGame(boardStates_O, moves_O, checkWin(map, 'O'));
-
     }
 
 
@@ -129,9 +126,7 @@ public class App {
                     printBoard(map);
                     System.out.println("Machine wins!!");
                     break;
-                    
                 }
-  
             }
             else if(player1.getTurn() == 1 && player1.getName().equals("player1")){
                 //Player1 making a move
@@ -147,7 +142,6 @@ public class App {
                     printBoard(map);
                     System.out.println("Player 1 wins!!");
                     break;
-                    
                 }
             }
             else if(player2.getTurn() == 1){

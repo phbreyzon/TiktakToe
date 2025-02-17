@@ -122,7 +122,6 @@ public class KI extends User{
             stateValues = normalizeWeights(stateValues);
             loadedDB.put(state, stateValues);
         }
-        
         saveDatabase();
     }
 
@@ -152,7 +151,6 @@ public class KI extends User{
                 normalizedWeights[i] = Math.max(MIN_THRESHOLD, Math.min(MAX_THRESHOLD, normalizedWeights[i]));
             }
         }
-
         return normalizedWeights;
     }
 
@@ -162,7 +160,4 @@ public class KI extends User{
     private double roundTo6Decimals(double value) {
         return Math.round(value * 1000000.0) / 1000000.0;
     }
-
-
-
 }
