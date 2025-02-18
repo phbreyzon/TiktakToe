@@ -52,7 +52,7 @@ public class App {
                 KI machine1 = new KI('X', turnX);
                 KI machine2 = new KI('O', turnO); 
                 machineGame(machine1, machine2);
-                System.out.println("Cycle number: " + i);              
+                System.out.println("Cycle number: " + (i +1));              
             }
         }
     }
@@ -200,7 +200,6 @@ public class App {
             if (i == 2 | i == 5 | i == 8) System.out.println(); 
         }
         System.out.println("");
-
     }
 
 
