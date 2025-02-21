@@ -1,5 +1,5 @@
 
-package tiktaktoe;
+package com.tiktaktoe;
 public class Board {
     private char[] map = {'-','-','-','-','-','-','-','-','-'};
     
