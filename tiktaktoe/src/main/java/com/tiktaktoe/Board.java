@@ -1,4 +1,4 @@
-package tiktakto;
+package tiktaktoe;
 
 public class Board {
     private char[] map = {'-','-','-','-','-','-','-','-','-'};
