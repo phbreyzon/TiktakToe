@@ -7,7 +7,6 @@ package com.tiktaktoe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 public class App {
 
     public static void main(String[] args) {
@@ -42,6 +41,8 @@ public class App {
         }
         else if(decision == 2){
             int training_cycles = Input.inputInt("Choose how many training cycles: ");
+            ProgressBar pb = new ProgressBar(); 
+            pb.setMax(training_cycles);
             for (int i = 0; i < training_cycles; i++) {
                 int turnX = 1;
                 int turnO = 0;
@@ -53,7 +54,7 @@ public class App {
                 KI machine1 = new KI('X', turnX);
                 KI machine2 = new KI('O', turnO); 
                 machineGame(machine1, machine2);
-                System.out.println("Cycle number: " + (i +1));              
+                pb.tickOne();
             }
         }
     }
@@ -76,7 +77,6 @@ public class App {
                 moves_X.add(move);
 
                 map.setMap(move, 'X');
-                printBoard(map);
                 if(checkWin(map, 'X')) break;
                 X.setTurn(0);
                 O.setTurn(1);
@@ -88,7 +88,6 @@ public class App {
                 boardStates_O.add(getBoardState(map));
                 moves_O.add(move);
                 map.setMap(move, 'O');
-                printBoard(map);
                 if(checkWin(map, 'O')) break;
                 O.setTurn(0);
                 X.setTurn(1);
