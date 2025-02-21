@@ -75,7 +75,6 @@ public class App {
                 moves_X.add(move);
 
                 map.setMap(move, 'X');
-                printBoard(map);
                 if(checkWin(map, 'X')) break;
                 X.setTurn(0);
                 O.setTurn(1);
@@ -87,7 +86,6 @@ public class App {
                 boardStates_O.add(getBoardState(map));
                 moves_O.add(move);
                 map.setMap(move, 'O');
-                printBoard(map);
                 if(checkWin(map, 'O')) break;
                 O.setTurn(0);
                 X.setTurn(1);
