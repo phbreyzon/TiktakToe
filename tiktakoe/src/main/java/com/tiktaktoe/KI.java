@@ -15,7 +15,7 @@ public class KI extends User{
 
     private Map<String, double[]> loadedDB;
     private String DATABASE_FILE = "database_X.csv";
-    private static final double BIAS = 0.5; // Bias value
+    private static final double BIAS = 0.1; // Bias value
     private static final double MIN_THRESHOLD = 0.0;
     private static final double MAX_THRESHOLD = 1.0;
 
@@ -110,9 +110,9 @@ public class KI extends User{
     // Learn from game outcome
     public void learnFromGame(List<String> gameStates, List<Integer> moves, boolean won, boolean draw) {
             double reward;
-            if(won) reward = 0.1;
-            else reward = -0.1;
-            if(draw) reward = 0.05;
+            if(won) reward = 0.5;
+            else reward = -0.8;
+            if(draw) reward = 0.2;
 
         for (int i = 0; i < gameStates.size(); i++) {
             String state = gameStates.get(i);
