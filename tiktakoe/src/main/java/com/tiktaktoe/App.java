@@ -100,8 +100,10 @@ public class App {
     // Starting game Player vs Player            
     public static void game(User player1, User player2){
 
-        List<String> boardStates = new ArrayList<>();
-        List<Integer> moves = new ArrayList<>();
+        List<String> boardStates_X = new ArrayList<>();
+        List<Integer> moves_X = new ArrayList<>();
+        List<String> boardStates_O = new ArrayList<>();
+        List<Integer> moves_O = new ArrayList<>();
 
         Board map = new Board();
         System.out.println("\nLet's begin: \n");
@@ -112,8 +114,14 @@ public class App {
                 // AI making a move
                 int machinemove = machineMoves(((KI) player1), player2, map);
                 // data for the AI
-                moves.add(machinemove);
-                boardStates.add(getBoardState(map));
+                if(player1.getSymbol() == 'X'){
+                    moves_X.add(machinemove);
+                    boardStates_X.add(getBoardState(map));
+                }
+                else if(player1.getSymbol() == 'O'){
+                    moves_O.add(machinemove);
+                    boardStates_X.add(getBoardState(map));
+                }
                 //updating state of map
                 map.setMap(machinemove, player1.getSymbol());
 
@@ -128,8 +136,15 @@ public class App {
                 //Player1 making a move
                 int playerMove = playerMakesMove(player1, player2, map);
                 // data for the AI
-                moves.add(playerMove);
-                boardStates.add(getBoardState(map));
+                if(player1.getSymbol() == 'X'){
+                    moves_X.add(machinemove);
+                    boardStates_X.add(getBoardState(map));
+                }
+                else if(player1.getSymbol() == 'O'){
+                    moves_O.add(machinemove);
+                    boardStates_X.add(getBoardState(map));
+                }
+
                 // updating state of map
                 map.setMap(playerMove, player1.getSymbol());
                 // check if player1 wins
@@ -141,9 +156,23 @@ public class App {
                 }
             }
             else if(player2.getTurn() == 1){
-                // player2 makes a move and updates map state 
-                map.setMap(playerMakesMove(player2, player1, map), player2.getSymbol());
-                // checks if player2 wins
+
+                int playerMove = playerMakesMove(player2, player1, map);
+                
+                // data for the AI
+                if(player2.getSymbol() == 'X'){
+                    moves_X.add(machinemove);
+                    boardStates_X.add(getBoardState(map));
+                }
+                else if(player2.getSymbol() == 'O'){
+                    moves_O.add(machinemove);
+                    boardStates_X.add(getBoardState(map));
+                }
+
+                // updating state of map
+                map.setMap(playerMove, player1.getSymbol());
+                
+                /// checks if player2 wins
                 if(checkWin(map, player2.getSymbol())){
                     printBoard(map);
                     System.out.println("Player 2 wins!!");
@@ -156,15 +185,27 @@ public class App {
 
         if(gameStop) System.out.println("It's a draw");
 
-        int finaldecision = Input.inputInt("Would you like the AI to learn from this match (as player1): (1 =yes) (0 = no):") ;
+        int finaldecision = Input.inputInt("Would you like the AI to learn from this match: (1 =yes) (0 = no):") ;
         if(finaldecision== 1 && player1.getName().equals("player1")){
-            KI machine = new KI(player1.getSymbol(), 0);
-            machine.learnFromGame(boardStates, moves, checkWin(map, player1.getSymbol()), gameStop);
+            KI machine1 = new KI(player1.getSymbol(), 0);
+            if(player1.getSymbol() == 'X') machine1.learnFromGame(boardStates_X, moves_X, checkWin(map, 'X'), gameStop);
+            else machine1.learnFromGame(boardStates_O, moves_O, checkWin(map, 'O'), gameStop);
+
+            KI machine2 = new KI(player2.getSymbol(), 0);
+            if(player2.getSymbol() == 'X') machine2.learnFromGame(boardStates_X, moves_X, checkWin(map, 'X'), gameStop);
+            else machine2.learnFromGame(boardStates_O, moves_O, checkWin(map, 'O'), gameStop);
+
+
+
         }
         else if(finaldecision == 1 && player1.getName().equals("machine")){
-            ((KI) player1).learnFromGame(boardStates, moves, checkWin(map, player1.getSymbol()), gameStop);
-        }
+            if(player1.getSymbol() == 'X') ((KI) player1).learnFromGame(boardStates_X, moves_X, checkWin(map, 'X'), gameStop);
+            else ((KI) player1).learnFromGame(boardStates_O, moves_O, checkWin(map, 'O'), gameStop);
 
+            KI machine2 = new KI(player2.getSymbol(), 0);
+            if(player2.getSymbol() == 'X') machine2.learnFromGame(boardStates_X, moves_X, checkWin(map, 'X'), gameStop);
+            else machine2.learnFromGame(boardStates_O, moves_O, checkWin(map, 'O'), gameStop);
+        }
     }
 
 
