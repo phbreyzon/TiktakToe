@@ -120,7 +120,7 @@ public class App {
                 }
                 else if(player1.getSymbol() == 'O'){
                     moves_O.add(machinemove);
-                    boardStates_X.add(getBoardState(map));
+                    boardStates_O.add(getBoardState(map));
                 }
                 //updating state of map
                 map.setMap(machinemove, player1.getSymbol());
@@ -137,12 +137,12 @@ public class App {
                 int playerMove = playerMakesMove(player1, player2, map);
                 // data for the AI
                 if(player1.getSymbol() == 'X'){
-                    moves_X.add(machinemove);
+                    moves_X.add(playerMove);
                     boardStates_X.add(getBoardState(map));
                 }
                 else if(player1.getSymbol() == 'O'){
-                    moves_O.add(machinemove);
-                    boardStates_X.add(getBoardState(map));
+                    moves_O.add(playerMove);
+                    boardStates_O.add(getBoardState(map));
                 }
 
                 // updating state of map
@@ -161,16 +161,16 @@ public class App {
                 
                 // data for the AI
                 if(player2.getSymbol() == 'X'){
-                    moves_X.add(machinemove);
+                    moves_X.add(playerMove);
                     boardStates_X.add(getBoardState(map));
                 }
                 else if(player2.getSymbol() == 'O'){
-                    moves_O.add(machinemove);
-                    boardStates_X.add(getBoardState(map));
+                    moves_O.add(playerMove);
+                    boardStates_O.add(getBoardState(map));
                 }
 
                 // updating state of map
-                map.setMap(playerMove, player1.getSymbol());
+                map.setMap(playerMove, player2.getSymbol());
                 
                 /// checks if player2 wins
                 if(checkWin(map, player2.getSymbol())){
