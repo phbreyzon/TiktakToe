@@ -15,9 +15,7 @@ public class KI extends User{
 
     private Map<String, double[]> loadedDB;
     private String DATABASE_FILE = "database_X.csv";
-    private static final double BIAS = 0.1; // Bias value
-    private static final double MIN_THRESHOLD = 0.0;
-    private static final double MAX_THRESHOLD = 1.0;
+    private static final double BIAS = 0.01; // Bias value
 
 
     public KI(char symbol, int turn) {
@@ -110,9 +108,9 @@ public class KI extends User{
     // Learn from game outcome
     public void learnFromGame(List<String> gameStates, List<Integer> moves, boolean won, boolean draw) {
             double reward;
-            if(won) reward = 0.5;
-            else reward = -0.8;
-            if(draw) reward = 0.2;
+            if(won) reward = 100;
+            else reward = -100;
+            if(draw) reward = 50;
 
         for (int i = 0; i < gameStates.size(); i++) {
             String state = gameStates.get(i);
@@ -144,12 +142,11 @@ public class KI extends User{
         for (int i = 0; i < weights.length; i++) {
             if (max == min) {
                 // Handle the case where all values are the same
-                normalizedWeights[i] = 0.5 + BIAS; // Default to middle value
+                normalizedWeights[i] = Math.signum(0.5 + BIAS); // Default to middle value
             } else {
-                normalizedWeights[i] = roundTo6Decimals(((double)(weights[i] - min) / (max - min)) + BIAS);
+                normalizedWeights[i] = roundTo6Decimals(Math.signum(normalizedWeights[i] + (new Random().nextInt(100) * BIAS)));
                 
                 // Ensure values stay within bounds
-                normalizedWeights[i] = Math.max(MIN_THRESHOLD, Math.min(MAX_THRESHOLD, normalizedWeights[i]));
             }
         }
         return normalizedWeights;
