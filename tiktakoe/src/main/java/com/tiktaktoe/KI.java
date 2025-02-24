@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import org.apache.commons.math3.analysis.function.Sigmoid;
+
 
 public class KI extends User{
 
@@ -108,9 +110,9 @@ public class KI extends User{
     // Learn from game outcome
     public void learnFromGame(List<String> gameStates, List<Integer> moves, boolean won, boolean draw) {
             double reward;
-            if(won) reward = 100;
-            else reward = -100;
-            if(draw) reward = 50;
+            if(won) reward = 5;
+            else reward = -5;
+            if(draw) reward = 2;
 
         for (int i = 0; i < gameStates.size(); i++) {
             String state = gameStates.get(i);
@@ -144,9 +146,8 @@ public class KI extends User{
                 // Handle the case where all values are the same
                 normalizedWeights[i] = Math.signum(0.5 + BIAS); // Default to middle value
             } else {
-                normalizedWeights[i] = roundTo6Decimals(Math.signum(normalizedWeights[i] + (new Random().nextInt(100) * BIAS)));
+                normalizedWeights[i] = roundTo6Decimals(Math.signum(normalizedWeights[i] + (new Random().nextInt(5) * BIAS)));
                 
-                // Ensure values stay within bounds
             }
         }
         return normalizedWeights;
