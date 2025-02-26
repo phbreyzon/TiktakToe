@@ -12,9 +12,17 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
-    <dependency>
-        <groupId>me.tongfei</groupId>
-        <artifactId>progressbar</artifactId>
-        <version>0.10.0</version>
-    </dependency>
+
+ 
+
+     <dependencies>
+     
+
+         <dependency>
+             <groupId>org.apache.commons</groupId>
+             <artifactId>commons-math3</artifactId>
+             <version>3.6.1</version>
+         </dependency>
+
+     </dependencies>
 </project>
