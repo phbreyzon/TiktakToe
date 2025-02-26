@@ -143,7 +143,7 @@ public class KI extends User{
 
         // Apply Min-Max normalization with bias
         for (int i = 0; i < weights.length; i++) {
-            if (max == min | weights[i] <= 0.000) {
+            if (max == min | weights[i] <= 0.0000) {
                 // Handle the case where all values are the same
                 normalizedWeights[i] = 0.5 + (new Random().nextDouble(-1,1) * BIAS); // BIAS Implementation
             } 
