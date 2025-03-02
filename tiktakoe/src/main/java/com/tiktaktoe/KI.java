@@ -155,8 +155,4 @@ public class KI extends User{
         }
         return normalizedWeights;
     }
-
-
-
-    // Helper method to round to 6 decimal places
 }
