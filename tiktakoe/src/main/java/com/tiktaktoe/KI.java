@@ -18,7 +18,7 @@ public class KI extends User{
 
     private Map<String, double[]> loadedDB;
     private String DATABASE_FILE = "database_X.csv";
-    private static final double BIAS = 0.5; // Bias value
+    private static final double BIAS = 0.01; // Bias value
 
 
     public KI(char symbol, int turn) {
