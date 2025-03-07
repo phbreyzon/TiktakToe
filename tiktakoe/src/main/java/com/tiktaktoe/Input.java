@@ -1,4 +1,4 @@
-package tiktakto;
+package com.tiktaktoe;
 
 import java.util.Scanner;
 

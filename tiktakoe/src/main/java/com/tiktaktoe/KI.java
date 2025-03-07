@@ -1,4 +1,4 @@
-package tiktakto;
+package com.tiktaktoe;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,14 +10,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import org.apache.commons.math3.analysis.function.*;
+
+
 
 public class KI extends User{
 
     private Map<String, double[]> loadedDB;
     private String DATABASE_FILE = "database_X.csv";
-    private static final double BIAS = 0.0; // Bias value
-    private static final double MIN_THRESHOLD = 0.0;
-    private static final double MAX_THRESHOLD = 1.0;
+    private static final double BIAS = 0.01; // Bias value
 
 
     public KI(char symbol, int turn) {
@@ -73,7 +74,6 @@ public class KI extends User{
 
 
 
-
    // Make a move based on learned data
     public int makeMove(Board board) {
         String boardState = getBoardState(board);
@@ -84,8 +84,9 @@ public class KI extends User{
         double maxValue = -1;
        
         for (int i = 0; i < 9; i++) {
-            if (board.getMap()[i] == '-' && moves[i] > maxValue) {
-                maxValue = moves[i];
+            double move_biased = (moves[i] + (new Random().nextDouble(1.1) * BIAS)); 
+            if (board.getMap()[i] == '-' && move_biased> maxValue) {
+                maxValue = move_biased;
                 bestMove = i;
             }
         }
@@ -108,18 +109,20 @@ public class KI extends User{
 
 
     // Learn from game outcome
-    public void learnFromGame(List<String> gameStates, List<Integer> moves, boolean won) {
-            int reward;
-            if(won) reward = 1;
-            else reward = -1;
+    public void learnFromGame(List<String> gameStates, List<Integer> moves, boolean won, boolean draw) {
+            double reward;
+            if(won) reward = 0.1;
+            else reward = -0.1;
+            if(draw) reward = 0.05;
 
         for (int i = 0; i < gameStates.size(); i++) {
             String state = gameStates.get(i);
             int move = moves.get(i);
             
             double[] stateValues = loadedDB.getOrDefault(state, new double[9]);
+            if(!won) stateValues[move] = -stateValues[move];
             stateValues[move] += reward;
-            stateValues = normalizeWeights(stateValues);
+            stateValues = normalizeWeights(stateValues, move);
             loadedDB.put(state, stateValues);
         }
         saveDatabase();
@@ -127,8 +130,7 @@ public class KI extends User{
 
 
 
-    // Normalize weights within MIN and MAX_THRESHOLD
-    private double[] normalizeWeights(double[] weights) {
+    private double[] normalizeWeights(double[] weights, int move) {
         double[] normalizedWeights = new double[weights.length];
         
         // Find min and max values
@@ -141,23 +143,16 @@ public class KI extends User{
 
         // Apply Min-Max normalization with bias
         for (int i = 0; i < weights.length; i++) {
-            if (max == min) {
+            if (max == min | weights[i] <= 0.0000) {
                 // Handle the case where all values are the same
-                normalizedWeights[i] = 0.5 + BIAS; // Default to middle value
-            } else {
-                normalizedWeights[i] = roundTo6Decimals(((double)(weights[i] - min) / (max - min)) + BIAS);
+                normalizedWeights[i] = 0.5 + (new Random().nextDouble(-1,1) * BIAS); // BIAS Implementation
+            } 
+            else if(i == move){                
+                normalizedWeights[i] = new Sigmoid().value(weights[i]);
                 
-                // Ensure values stay within bounds
-                normalizedWeights[i] = Math.max(MIN_THRESHOLD, Math.min(MAX_THRESHOLD, normalizedWeights[i]));
-            }
+            } 
+            else normalizedWeights[i] = weights[i];
         }
         return normalizedWeights;
-    }
-
-
-
-    // Helper method to round to 6 decimal places
-    private double roundTo6Decimals(double value) {
-        return Math.round(value * 1000000.0) / 1000000.0;
     }
 }
