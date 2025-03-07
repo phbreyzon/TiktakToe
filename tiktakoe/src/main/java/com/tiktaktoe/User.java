@@ -1,4 +1,5 @@
-package tiktakto;
+
+package com.tiktaktoe;
 
 public class User {
     private char Symbol; 

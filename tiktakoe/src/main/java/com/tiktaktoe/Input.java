@@ -1,4 +1,4 @@
-package tiktakto;
+package com.tiktaktoe;
 
 import java.util.Scanner;
 
@@ -22,6 +22,18 @@ public class Input {
             try {
                 System.out.print(prompt);
                 return Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid integer.");
+            }
+        }
+    }
+     public static int validMove(String prompt, Board board) {
+        while (true) {
+            try {
+                System.out.print(prompt);
+                int position = Integer.parseInt(scanner.nextLine());
+                if(board.getMap()[position] == '-') return position;
+                else System.out.println("Invalid move, again: ");
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a valid integer.");
             }
