@@ -3,7 +3,8 @@ package com.tiktaktoe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-public class App {
+
+public class CLIApp {
 
     public static void main(String[] args) {
         int decision = Input.inputInt("Choose between a pvp (1) or mvp (0) or training (2):");
@@ -258,4 +259,7 @@ public class App {
     private static String getBoardState(Board board) {
         return String.copyValueOf(board.getMap());
     }
+
+    
 }
+
