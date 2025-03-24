@@ -15,7 +15,7 @@ public class KI extends User {
     private Map<String, double[]> cachedDB;
     private String DATABASE_FILE = "tiktaktoe.db";
     private Connection conn;
-    private static final double BIAS = 0.1; // Bias value (between 0 and max 1)
+    private static final double BIAS = 0.3; // Bias value (between 0 and max 1)
 
     public KI(char symbol, int turn) {
         super(symbol, turn, "machine");
