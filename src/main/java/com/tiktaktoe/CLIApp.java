@@ -3,7 +3,8 @@ package com.tiktaktoe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-public class App {
+
+public class CLIApp {
 
     public static void main(String[] args) {
         int decision = Input.inputInt("Choose between a pvp (1) or mvp (0) or training (2):");
@@ -56,7 +57,7 @@ public class App {
     }
 
 
-    // Starting game Player vs Machine
+    // Starting game Machine vs Machine
     public static void machineGame(KI X, KI O){
  
         List<String> boardStates_O  = new ArrayList<>();
@@ -97,7 +98,7 @@ public class App {
 
 
 
-    // Starting game Player vs Player            
+    // Starting game Player / Machine vs Player            
     public static void game(User player1, User player2){
 
         List<String> boardStates_X = new ArrayList<>();
@@ -185,8 +186,9 @@ public class App {
 
         if(gameStop) System.out.println("It's a draw");
 
-        int finaldecision = Input.inputInt("Would you like the AI to learn from this match: (1 =yes) (0 = no):") ;
-        if(finaldecision== 1 && player1.getName().equals("player1")){
+        int learning = Input.inputInt("Would you like the AI to learn from this match: (1 =yes) (0 = no):") ;
+         
+        if(learning== 1 && player1.getName().equals("player1")){
             KI machine1 = new KI(player1.getSymbol(), 0);
             if(player1.getSymbol() == 'X') machine1.learnFromGame(boardStates_X, moves_X, checkWin(map, 'X'), gameStop);
             else machine1.learnFromGame(boardStates_O, moves_O, checkWin(map, 'O'), gameStop);
@@ -198,7 +200,7 @@ public class App {
 
 
         }
-        else if(finaldecision == 1 && player1.getName().equals("machine")){
+        else if(learning == 1 && player1.getName().equals("machine")){
             if(player1.getSymbol() == 'X') ((KI) player1).learnFromGame(boardStates_X, moves_X, checkWin(map, 'X'), gameStop);
             else ((KI) player1).learnFromGame(boardStates_O, moves_O, checkWin(map, 'O'), gameStop);
 
@@ -257,4 +259,7 @@ public class App {
     private static String getBoardState(Board board) {
         return String.copyValueOf(board.getMap());
     }
+
+    
 }
+
