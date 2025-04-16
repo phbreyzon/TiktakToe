@@ -8,14 +8,6 @@
     <artifactId>tiktakoe</artifactId>
     <version>1.0</version>
 
-    <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <java.version>17</java.version>
-    </properties>
-
- 
-
      <dependencies>
 
          <dependency>
