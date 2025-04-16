@@ -1,5 +1,3 @@
-Here’s a README for your Java project:
-
 # Tic-Tac-Toe AI
 
 This project is an artificial intelligence (AI) that runs on top of the transformer architecture and has learned to play tic-tac-toe reasonably well by training against itself. It is a command-line interface (CLI) application, which means it must be run in the terminal.
