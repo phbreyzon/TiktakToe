@@ -1,6 +1,8 @@
 package com.tiktaktoe;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+
 import org.apache.commons.math3.analysis.function.Sigmoid;
 
 public class KI extends User {
@@ -26,31 +31,43 @@ public class KI extends User {
 
     private void initDatabase() {
         try {
-            // Get path to database file within resources
-            URL resourceUrl = getClass().getClassLoader().getResource(DATABASE_FILE);
-            String dbPath;
-            
-            if (resourceUrl == null) {
-                // Database doesn't exist yet - create in resources directory
-                dbPath = new File("src/main/resources/" + DATABASE_FILE).getAbsolutePath();
-            } else {
-                dbPath = new File(resourceUrl.toURI()).getAbsolutePath();
+            Class.forName("org.sqlite.JDBC");
+
+            // Get current working directory
+            String currentPath = System.getProperty("user.dir");
+            File dbFile = new File(currentPath + File.separator + DATABASE_FILE);
+
+            // Print debug information
+            System.out.println("Looking for database at: " + dbFile.getAbsolutePath());
+            System.out.println("Database file exists: " + dbFile.exists());
+
+            // Create new database file if it doesn't exist
+            if (!dbFile.exists()) {
+                System.out.println("Creating new database file...");
+                try {
+                    dbFile.createNewFile();
+                } catch (IOException e) {
+                    System.out.println("Failed to create database file: " + e.getMessage());
+                    e.printStackTrace();
+                }
             }
-            
+
             // Connect to database
-            conn = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
-            
+            String dbUrl = "jdbc:sqlite:" + dbFile.getAbsolutePath();
+            System.out.println("Connecting to database using URL: " + dbUrl);
+            conn = DriverManager.getConnection(dbUrl);
+
             // Create table for each symbol if it doesn't exist
             Statement stmt = conn.createStatement();
             stmt.execute(
-                "CREATE TABLE IF NOT EXISTS moves_" + getSymbol() + " (" +
-                "board_state TEXT PRIMARY KEY, " +
-                "move_0 REAL, move_1 REAL, move_2 REAL, " +
-                "move_3 REAL, move_4 REAL, move_5 REAL, " +
-                "move_6 REAL, move_7 REAL, move_8 REAL" +
-                ")"
-            );
+                    "CREATE TABLE IF NOT EXISTS moves_" + getSymbol() + " (" +
+                            "board_state TEXT PRIMARY KEY, " +
+                            "move_0 REAL, move_1 REAL, move_2 REAL, " +
+                            "move_3 REAL, move_4 REAL, move_5 REAL, " +
+                            "move_6 REAL, move_7 REAL, move_8 REAL" +
+                            ")");
             stmt.close();
+            System.out.println("Database initialized successfully!");
         } catch (Exception e) {
             System.out.println("Database initialization error: " + e.getMessage());
             e.printStackTrace();
